@@ -4,7 +4,7 @@ Javascript class for drawing a sphere on an HTML5 canvas without any external de
 
 # Live demo
 
-[https://hermann-sw.github.io/javascript-sphere](/https://hermann-sw.github.io/javascript-sphere/)
+[https://hermann-sw.github.io/javascript-sphere/](https://hermann-sw.github.io/javascript-sphere/)
 
 # mousemove event demo
 
