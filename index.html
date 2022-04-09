@@ -8,31 +8,35 @@
 <body>
 
   <!-- Canvas -->
-  <canvas id="myCanvas"></canvas> 
+  <canvas id="myCanvas" onmousemove="mousemove(event)"></canvas> 
 
   <script type="text/javascript">
-  
+ 
+    var canvas;
+    var radius = 100;
+ 
     document.onreadystatechange = function() {
-  
+      draw(-1, 0);
+    }
+
+    // X and Y rotation angle (RAD)
+    function draw(phi, theta) {
       // Set canvas width and height to full screen,
       var myCanvas = document.getElementById("myCanvas");
+      canvas = myCanvas;
       myCanvas.width = document.body.clientWidth;
       myCanvas.height = document.body.clientHeight;  
     
-      // X and Y rotation angle (RAD)
-      var theta = -1;
-      var phi = 0;
       // Field of view (RAD)
       var fov = .7;
       var solid = true;
 
       // Sphere aspect
-      var colorLatitude = [200, 50, 0];
-      var colorLongitude = [255, 0, 0];
-      var radius = 100;
-      var distancePoints = .01 // (RAD angle)
-      var latitudeSegments = 20;
-      var longitudeSegments = 20;
+      var colorLatitude = [150, 150, 255];
+      var colorLongitude = [0, 255, 0];
+      var distancePoints = .04 // (RAD angle)
+      var latitudeSegments = 10;
+      var longitudeSegments = 5;
       
       // Class instantiation
       var g = new Graphics3d("myCanvas", theta, phi, fov, solid);
@@ -42,7 +46,18 @@
       g.drawSphere(colorLatitude, colorLongitude, radius, distancePoints, latitudeSegments, longitudeSegments);    
           
     }
-        
+
+    function mousemove(e) {
+      const middleX = canvas.width/2;
+      const middleY = canvas.height/2;
+      dx = (e.clientX - middleX) / radius;
+      if (dx < -2) { dx = -2; }
+      if (dx >  2) { dx = 2; }
+      dy = (middleY - e.clientY) / radius;
+      if (dy < -2) { dy = -2; }
+      if (dy >  2) { dy = 2; }
+      draw( dx * Math.PI / 2, dy * Math.PI / 2 );
+    }
   </script>
   
 </body>
