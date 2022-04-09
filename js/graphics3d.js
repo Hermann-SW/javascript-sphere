@@ -47,6 +47,100 @@ var Graphics3d = function(canvasId, theta, phi, fov, solid)
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
     
+    // Draw a straight line between cartesian coordinate pair
+    this.drawLineCartesian = function(color, v, w)
+    {
+        x = v[0];
+        y = v[1];
+        z = v[2];
+        x2 = w[0];
+        y2 = w[1];
+        z2 = w[2];
+
+
+        y *= -1;
+
+        // ---------------------------------------------------------
+        // Rotate Y Axis
+        // ---------------------------------------------------------
+
+        var vector = [[x, y, z]];
+        r = this.multiplyMatrix(vector, this.rotateY);
+        x = r[0][0];
+        y = r[0][1];
+        z = r[0][2];
+
+        // ---------------------------------------------------------
+        // Rotate X Axis
+        // ---------------------------------------------------------
+
+        var vector = [[x, y, z]];
+        r = this.multiplyMatrix(vector, this.rotateX);
+        x = r[0][0];
+        y = r[0][1];
+        z = r[0][2];
+
+        // ---------------------------------------------------------
+        // Camera
+        // ---------------------------------------------------------
+
+        var vectorW = [[x, y, z, 1]];
+        r = this.multiplyMatrix(vectorW, this.camera);
+        x = r[0][0];
+        y = r[0][1];
+        z = r[0][2];
+
+        // ---------------------------------------------------------
+
+        y2 *= -1;
+
+        // ---------------------------------------------------------
+        // Rotate Y Axis
+        // ---------------------------------------------------------
+
+        var vector2 = [[x2, y2, z2]];
+        r2 = this.multiplyMatrix(vector2, this.rotateY);
+        x2 = r2[0][0];
+        y2 = r2[0][1];
+        z2 = r2[0][2];
+
+        // ---------------------------------------------------------
+        // Rotate X Axis
+        // ---------------------------------------------------------
+
+        var vector2 = [[x2, y2, z2]];
+        r2 = this.multiplyMatrix(vector2, this.rotateX);
+        x2 = r2[0][0];
+        y2 = r2[0][1];
+        z2 = r2[0][2];
+
+        // ---------------------------------------------------------
+        // Camera 
+        // ---------------------------------------------------------
+
+        var vectorW2 = [[x2, y2, z2, 1]];
+        r2 = this.multiplyMatrix(vectorW2, this.camera);
+        x2 = r2[0][0];
+        y2 = r2[0][1];
+        z2 = r2[0][2];
+
+        // ---------------------------------------------------------
+
+        var originX = this.canvas.width / 2 + x;
+        var originY = this.canvas.height / 2 + y;
+
+        var originX2 = this.canvas.width / 2 + x2;
+        var originY2 = this.canvas.height / 2 + y2;
+
+        // Draw the line in the screen.
+        this.context.strokeStyle = color;
+        this.context.beginPath();
+        this.context.moveTo(parseInt(originX), parseInt(originY));
+        this.context.lineTo(parseInt(originX2), parseInt(originY2));
+        this.context.stroke();
+
+    }
+
     // Draw a point expressed in cartesian coordinates
     this.drawPointCartesian = function(color, x, y, z)
     {
@@ -94,7 +188,11 @@ var Graphics3d = function(canvasId, theta, phi, fov, solid)
         // Draw the pixel in the screen.
         // This method was much faster than the "putImageData" function
         // More info at: http://stackoverflow.com/questions/4899799/whats-the-best-way-to-set-a-single-pixel-in-an-html5-canvas
-        this.context.fillStyle = "rgb("+color[0]+","+color[1]+","+color[2]+")";
+        if (z < 0) {
+            this.context.fillStyle = "rgb(96,96,96)";
+        } else {
+            this.context.fillStyle = "rgb("+color[0]+","+color[1]+","+color[2]+")";
+        }
         this.context.fillRect(parseInt(originX), parseInt(originY), 1, 1);
 
     }
@@ -140,6 +238,26 @@ var Graphics3d = function(canvasId, theta, phi, fov, solid)
             }
         }
 
+        this.drawPointCartesian(
+          colorLongitude,
+          0,
+          radius * Math.cos(theta),
+          Math.sin(theta) * z
+        );
+
+        col = "rgb(255, 255, 255)";
+
+        v1 = [  Math.sqrt(8/9) * radius,                        0, -radius / 3 ];
+        v2 = [ -Math.sqrt(2/9) * radius,  Math.sqrt(2/3) * radius, -radius / 3 ];
+        v3 = [ -Math.sqrt(2/9) * radius, -Math.sqrt(2/3) * radius, -radius / 3 ];
+        v4 = [                        0,                        0,      radius ];
+
+        this.drawLineCartesian( col, v1, v2 );
+        this.drawLineCartesian( col, v1, v3 );
+        this.drawLineCartesian( col, v1, v4 );
+        this.drawLineCartesian( col, v2, v3 );
+        this.drawLineCartesian( col, v2, v4 );
+        this.drawLineCartesian( col, v3, v4 );
     }
     
     // Matrix multiplication algorithm

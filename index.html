@@ -8,11 +8,12 @@
 <body>
 
   <!-- Canvas -->
-  <canvas id="myCanvas" onmousemove="mousemove(event)"></canvas> 
+  <canvas id="myCanvas" onmousemove="mousemove(event)" onmousedown="mousedown(event)" onmouseup="mouseup(event)"></canvas> 
 
   <script type="text/javascript">
  
     var canvas;
+    var down = false;
     var radius = 100;
  
     document.onreadystatechange = function() {
@@ -29,14 +30,14 @@
     
       // Field of view (RAD)
       var fov = .7;
-      var solid = true;
+      var solid = down;
 
       // Sphere aspect
       var colorLatitude = [150, 150, 255];
       var colorLongitude = [0, 255, 0];
       var distancePoints = .04 // (RAD angle)
-      var latitudeSegments = 10;
-      var longitudeSegments = 5;
+      var latitudeSegments = 4;
+      var longitudeSegments = 4;
       
       // Class instantiation
       var g = new Graphics3d("myCanvas", theta, phi, fov, solid);
@@ -57,6 +58,16 @@
       if (dy < -2) { dy = -2; }
       if (dy >  2) { dy = 2; }
       draw( dx * Math.PI / 2, dy * Math.PI / 2 );
+    }
+
+    function mousedown(e) {
+      down = true;
+      mousemove(e);
+    }
+
+    function mouseup(e) {
+      down = false;
+      mousemove(e);
     }
   </script>
   
