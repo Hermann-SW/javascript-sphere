@@ -2,10 +2,6 @@
 
 Javascript class for drawing a sphere on an HTML5 canvas without any external dependency or library by using the Orthographic Projection Matrix technic.
 
-# Screenshot
+# mousemove event demo
 
-[![Javascript Sphere.](https://federicopfaffendorf.com.ar/etc/javascript-sphere.png)](https://federicopfaffendorf.com.ar/etc/javascript-sphere.png)
-
-# Live demo
-
-http://www.federicopfaffendorf.com.ar/etc/javascript-sphere
+![demo](res/Peek_2022-04-09_14-12.gif)
